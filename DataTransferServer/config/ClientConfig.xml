@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ServerConfig>
+	<NetConfig>
+		<ServerIP>127.0.0.1</ServerIP>
+		<ServerPort>9000</ServerPort>
+	</NetConfig>
+	<AuthConfig>
+		<NonSym>none</NonSym>
+		<Sym>tea</Sym>
+		<AuthDigest>md5</AuthDigest>
+		<MessageDigest>none</MessageDigest>
+	</AuthConfig>
+	<ClientInfo>
+		<ClientId>fxz_client</ClientId>
+		<UserId>fxz_client_userid</UserId>
+		<AppId>fxz_client_appid</AppId>
+	</ClientInfo>
+	<PortList>
+		<TargetClient Id="fxz_localserver">
+			<LocalPort>10240</LocalPort>
+			<RemotePort>1000</RemotePort>
+		</TargetClient>
+	</PortList>
+	<MaxRetryInternal>60000</MaxRetryInternal>
+</ServerConfig>
