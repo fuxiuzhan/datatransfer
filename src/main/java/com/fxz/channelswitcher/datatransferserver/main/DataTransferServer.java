@@ -80,6 +80,12 @@ public class DataTransferServer extends Thread {
 		this.authConfig = auconfig;
 	}
 
+	/**
+	 * TODO 将用户管理模块改造,增加用户获取的接口,屏蔽不同存储实现
+	 *		对数据处理增加过滤器链，增强对数据的控制
+	 *		提供api管理接口，实现对裂解主机的动态管理
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.err.println("Need a Config File to Start.... ");
