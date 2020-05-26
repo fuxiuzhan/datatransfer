@@ -20,7 +20,7 @@ import com.fxz.channelswitcher.datatransferserver.constant.Params;
 import com.fxz.channelswitcher.datatransferserver.ctrl.UserCtrl;
 import com.fxz.channelswitcher.datatransferserver.handler.HandlerFactory;
 import com.fxz.channelswitcher.datatransferserver.messages.BaseMessage;
-import com.fxz.channelswitcher.datatransferserver.messages.Handler.IProcessMessage;
+import com.fxz.channelswitcher.datatransferserver.messages.handler.IProcessMessage;
 import com.fxz.channelswitcher.datatransferserver.statistic.InitConfig;
 import com.fxz.channelswitcher.datatransferserver.statistic.ServerConfig;
 import io.netty.bootstrap.ServerBootstrap;

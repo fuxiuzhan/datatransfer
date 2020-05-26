@@ -1,7 +1,7 @@
 package com.fxz.channelswitcher.datatransferserver.handler;
 
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
-import com.fxz.channelswitcher.datatransferserver.messages.Handler.*;
+import com.fxz.channelswitcher.datatransferserver.messages.handler.*;
 
 import java.util.HashMap;
 import java.util.Map;
