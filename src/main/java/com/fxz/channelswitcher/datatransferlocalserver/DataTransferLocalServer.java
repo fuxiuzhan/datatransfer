@@ -19,7 +19,7 @@ import com.fxz.channelswitcher.datatransferserver.compress.CompressFactory;
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
 import com.fxz.channelswitcher.datatransferserver.messages.*;
 import com.fxz.channelswitcher.datatransferserver.statistic.InitConfig;
-import com.fxz.channelswitcher.datatransferserver.statistic.LocalServerConfig;
+import com.fxz.channelswitcher.datatransferserver.config.LocalServerConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientInfo;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
 import io.netty.bootstrap.Bootstrap;

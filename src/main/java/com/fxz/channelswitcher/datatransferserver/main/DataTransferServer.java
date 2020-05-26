@@ -22,7 +22,7 @@ import com.fxz.channelswitcher.datatransferserver.handler.HandlerFactory;
 import com.fxz.channelswitcher.datatransferserver.messages.BaseMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.handler.IProcessMessage;
 import com.fxz.channelswitcher.datatransferserver.statistic.InitConfig;
-import com.fxz.channelswitcher.datatransferserver.statistic.ServerConfig;
+import com.fxz.channelswitcher.datatransferserver.config.ServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

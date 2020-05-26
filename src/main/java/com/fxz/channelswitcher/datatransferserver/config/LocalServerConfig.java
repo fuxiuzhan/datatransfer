@@ -1,21 +1,20 @@
-package com.fxz.channelswitcher.datatransferserver.statistic;
+package com.fxz.channelswitcher.datatransferserver.config;
+
 
 import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.fxz.channelswitcher.datatransferserver.statistic.User;
 
 /**
- * @ClassName: ClientConfig
- * @Description: 客户端配置信息 客户端配置信息主要包含以下几部分1、服务端地址配置 2、客户端信息配置 3、通讯配置 4、端口映射列表
+ * @ClassName: LocalServerConfig
+ * @Description: 客户端配置信息 客户端配置信息主要包含以下几部分1、服务端地址配置 2、客户端信息配置 3、通讯配置 4、本地接口配置
  *               5、断开重连配置
  * 
  *               1、服务端地址配置{1、服务端域名/IP，2、服务端Port} 2、客户端信息配置{1、ClientId，2、UserId
- *               3、AppId} 3、通讯配置 4、端口映射List<LocalPort:RemotePort> 5、断开重连{1、重连间隔}
+ *               3、AppId} 3、通讯配置 4、本地接口配置（主要值连接对端端口使用的地址） 5、断开重连{1、重连间隔}
  * @author: fuxiuzhan@163.com
- * @date: 2018年10月17日 上午7:57:27
+ * @date: 2018年10月17日 上午8:06:57
  */
-public class ClientConfig {
+public class LocalServerConfig {
 	/*
 	 * 服务端地址配置
 	 */
@@ -30,9 +29,9 @@ public class ClientConfig {
 	 */
 	private static AuthConfig authConfig = new AuthConfig();
 	/*
-	 * 端口映射
+	 * 绑定本地端口
 	 */
-	private static List<String> portList = new ArrayList<>();
+	private static String bindIP = "0.0.0.0";
 	/*
 	 * 断开重连间隔
 	 */
@@ -43,7 +42,7 @@ public class ClientConfig {
 	}
 
 	public static void setServerIP(String serverIP) {
-		ClientConfig.serverIP = serverIP;
+		LocalServerConfig.serverIP = serverIP;
 	}
 
 	public static int getServerPort() {
@@ -51,7 +50,7 @@ public class ClientConfig {
 	}
 
 	public static void setServerPort(int serverPort) {
-		ClientConfig.serverPort = serverPort;
+		LocalServerConfig.serverPort = serverPort;
 	}
 
 	public static User getUser() {
@@ -59,7 +58,7 @@ public class ClientConfig {
 	}
 
 	public static void setUser(User user) {
-		ClientConfig.user = user;
+		LocalServerConfig.user = user;
 	}
 
 	public static AuthConfig getAuthConfig() {
@@ -67,15 +66,15 @@ public class ClientConfig {
 	}
 
 	public static void setAuthConfig(AuthConfig authConfig) {
-		ClientConfig.authConfig = authConfig;
+		LocalServerConfig.authConfig = authConfig;
 	}
 
-	public static List<String> getPortList() {
-		return portList;
+	public static String getBindIP() {
+		return bindIP;
 	}
 
-	public static void setPortList(List<String> portList) {
-		ClientConfig.portList = portList;
+	public static void setBindIP(String bindIP) {
+		LocalServerConfig.bindIP = bindIP;
 	}
 
 	public static int getReTryInternal() {
@@ -83,8 +82,6 @@ public class ClientConfig {
 	}
 
 	public static void setReTryInternal(int reTryInternal) {
-		ClientConfig.reTryInternal = reTryInternal;
+		LocalServerConfig.reTryInternal = reTryInternal;
 	}
-
-
 }

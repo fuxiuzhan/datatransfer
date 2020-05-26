@@ -1,6 +1,7 @@
-package com.fxz.channelswitcher.datatransferserver.statistic;
+package com.fxz.channelswitcher.datatransferserver.config;
 
 import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
+import com.fxz.channelswitcher.datatransferserver.statistic.User;
 
 import java.util.ArrayList;
 import java.util.List;

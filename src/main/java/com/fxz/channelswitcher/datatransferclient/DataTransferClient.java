@@ -20,7 +20,7 @@ import com.fxz.channelswitcher.datatransferserver.messages.BaseMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.VerifyMessage;
-import com.fxz.channelswitcher.datatransferserver.statistic.ClientConfig;
+import com.fxz.channelswitcher.datatransferserver.config.ClientConfig;
 import com.fxz.channelswitcher.datatransferserver.statistic.InitConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientInfo;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
