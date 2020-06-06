@@ -116,7 +116,7 @@ public class DataTransferServer extends Thread {
 							if (!authConfig.getMessageDigest().equalsIgnoreCase("none")) {
 								ch.pipeline().addLast(new CheckSumHandler(authConfig.getMessageDigest()));
 							}
-							ch.pipeline().addLast(new CompressHandler(CompressFactory.getCompressor("snappy")));
+							//ch.pipeline().addLast(new CompressHandler(CompressFactory.getCompressor("snappy")));
 							ch.pipeline().addLast(new AuthHandler(authConfig));
 							ch.pipeline().addLast(new IdleStateHandler(600, 0, 0, TimeUnit.SECONDS));
 							ch.pipeline().addLast(new HeartBeatHandler());

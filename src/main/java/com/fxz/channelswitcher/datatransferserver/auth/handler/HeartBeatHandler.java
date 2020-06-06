@@ -33,14 +33,14 @@ public class HeartBeatHandler extends ChannelHandlerAdapter {
 		if (evt instanceof IdleStateEvent) {
 			IdleStateEvent event = (IdleStateEvent) evt;
 			if (event.state() == IdleState.READER_IDLE) {
-				logger.info("READER_IDLE");
+				logger.info("READER_IDLE " + "Peer Remote Address->" + ctx.channel().remoteAddress());
 				ctx.writeAndFlush(new HeartBeatMessage());
-				logger.info("Send HeartBeat");
+				logger.info("Send HeartBeat" + "Peer Remote Address->" + ctx.channel().remoteAddress());
 			}
 			if (event.state() == IdleState.WRITER_IDLE) {
-				logger.info("WRITER_IDLE");
+				logger.info("WRITER_IDLE" + "Peer Remote Address->" + ctx.channel().remoteAddress());
 				ctx.writeAndFlush(new HeartBeatMessage());
-				logger.info("Send HeartBeat");
+				logger.info("Send HeartBeat" + "Peer Remote Address->" + ctx.channel().remoteAddress());
 			}
 		} else {
 			super.userEventTriggered(ctx, evt);
