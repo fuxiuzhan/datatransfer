@@ -225,6 +225,7 @@ public class DataTransferLocalServer extends Thread {
                     chm.entrySet().stream().forEach(a -> {
                         if (System.currentTimeMillis() - a.getValue().getTimeStamp() > 10 * 60 * 1000) {
                             a.getValue().close();
+                            LocalServerConfig.getConnectMap().remove(a.getKey());
                             System.out.println(a + " socket slice over 10min closed...");
                         }
                     });

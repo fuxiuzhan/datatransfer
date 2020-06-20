@@ -4,6 +4,7 @@ import com.fxz.channelswitcher.datatransferserver.constant.Const;
 import com.fxz.channelswitcher.datatransferserver.messages.ConnectMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
+import com.fxz.channelswitcher.datatransferserver.statistic.LocalServerConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -66,6 +67,7 @@ public class ClientConnector extends Thread {
                             ClientParams.getMainChannel().writeAndFlush(resultMessage);
                             logger.error("Error->" + cause.getLocalizedMessage());
                             ClientParams.removeChannel(connectMessage.getSocketUUID());
+                            LocalServerConfig.getConnectMap().remove(lSocketId.get());
                         }
 
                         @Override
@@ -91,6 +93,7 @@ public class ClientConnector extends Thread {
                             ClientParams.getMainChannel().writeAndFlush(resultMessage);
                             logger.error("Error->" + "disconnect");
                             ClientParams.removeChannel(connectMessage.getSocketUUID());
+                            LocalServerConfig.getConnectMap().remove(lSocketId.get());
                         }
 
                         @Override
