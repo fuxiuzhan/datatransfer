@@ -21,8 +21,8 @@ public class ClientConnector extends Thread {
     private String ip;
     private int port;
     private ConnectMessage connectMessage;
-    private static ChannelHandlerContext ctx;
-    private static Long timeStamp = System.currentTimeMillis();
+    private ChannelHandlerContext detectCtx = null;
+    private volatile Long timeStamp = System.currentTimeMillis();
     AttributeKey<String> lsock = AttributeKey.valueOf("lsocketId");
     Attribute<String> lSocketId;
     AttributeKey<String> socketuuid = AttributeKey.valueOf("socketuuid");
@@ -35,9 +35,11 @@ public class ClientConnector extends Thread {
 
     public void close() {
         try {
-            ctx.close().addListener(e -> {
-                System.out.println("closed..");
-            });
+            if (detectCtx != null) {
+                detectCtx.close().addListener(e -> {
+                    System.out.println("closed..");
+                });
+            }
         } catch (Exception e) {
         }
     }
@@ -74,6 +76,7 @@ public class ClientConnector extends Thread {
                         public void channelActive(ChannelHandlerContext ctx) throws Exception {
                             // TODO Auto-generated method stub
 
+                            detectCtx = ctx;
                             ClientParams.addChannel(connectMessage.getlSocketId(), ctx.channel());
                             ResultMessage resultMessage = new ResultMessage(Const.RTN_CONNECT, "access", true);
                             resultMessage.setSocketUUID(connectMessage.getSocketUUID());
