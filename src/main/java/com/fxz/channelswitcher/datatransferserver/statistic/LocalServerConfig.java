@@ -1,7 +1,10 @@
 package com.fxz.channelswitcher.datatransferserver.statistic;
 
 
+import com.fxz.channelswitcher.datatransferlocalserver.ClientConnector;
 import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @ClassName: LocalServerConfig
@@ -14,6 +17,8 @@ import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
  * @date: 2018年10月17日 上午8:06:57
  */
 public class LocalServerConfig {
+
+	private static ConcurrentHashMap<String, ClientConnector> connectMap=new ConcurrentHashMap<>();
 	/*
 	 * 服务端地址配置
 	 */
@@ -35,6 +40,10 @@ public class LocalServerConfig {
 	 * 断开重连间隔
 	 */
 	private static int reTryInternal = 60 * 1000;
+
+	public static ConcurrentHashMap<String, ClientConnector> getConnectMap() {
+		return connectMap;
+	}
 
 	public static String getServerIP() {
 		return serverIP;
