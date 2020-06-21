@@ -52,7 +52,7 @@ public class ClientConnector extends Thread {
 
     @Override
     public void run() {
-        EventLoopGroup group = new NioEventLoopGroup();
+        EventLoopGroup group = new NioEventLoopGroup(2);
         try {
             Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true).option(ChannelOption.SO_LINGER, 0).handler(new ChannelInitializer<SocketChannel>() {

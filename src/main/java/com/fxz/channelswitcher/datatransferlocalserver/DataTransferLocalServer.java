@@ -33,6 +33,7 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.ReferenceCountUtil;
 import org.apache.log4j.Logger;
+import org.mortbay.util.ajax.JSON;
 
 import javax.net.ssl.SSLEngine;
 import java.util.concurrent.ConcurrentHashMap;
@@ -220,10 +221,14 @@ public class DataTransferLocalServer extends Thread {
             @Override
             public void run() {
                 try {
+                	System.out.println("start detecting.....");
                     ConcurrentHashMap<String, ClientConnector> chm = new ConcurrentHashMap<>();
                     chm.putAll(LocalServerConfig.getConnectMap());
+                    System.out.println("pair size->"+chm.size());
                     chm.entrySet().stream().forEach(a -> {
-                        if (System.currentTimeMillis() - a.getValue().getTimeStamp() > 10 * 60 * 1000) {
+                    	long interal=System.currentTimeMillis() - a.getValue().getTimeStamp();
+                    	System.out.println("socket->"+a.getKey()+" internl->"+interal);
+                        if (interal > 10 * 60 * 1000) {
                             a.getValue().close();
                             LocalServerConfig.getConnectMap().remove(a.getKey());
                             System.out.println(a + " socket slice over 10min closed...");
@@ -233,7 +238,7 @@ public class DataTransferLocalServer extends Thread {
 
                 }
             }
-        }, 2 * 60, 10 * 60, TimeUnit.SECONDS);
+        }, 2 * 60, 2 * 60, TimeUnit.SECONDS);
         //PropertyConfigurator.configure($ContentRoot$+"/config/log4j.properties");
         new DataTransferLocalServer(LocalServerConfig.getServerIP(), LocalServerConfig.getServerPort(), LocalServerConfig.getAuthConfig()).start();
     }
