@@ -53,8 +53,8 @@ public class ClientConnector extends Thread {
     @Override
     public void run() {
         EventLoopGroup group = new NioEventLoopGroup(2);
+        Bootstrap b = new Bootstrap();
         try {
-            Bootstrap b = new Bootstrap();
             b.group(group).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true).option(ChannelOption.SO_LINGER, 0).handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
@@ -133,6 +133,15 @@ public class ClientConnector extends Thread {
             ClientParams.getMainChannel().writeAndFlush(resultMessage);
             logger.error("Error->" + e.getLocalizedMessage());
         } finally {
+        	if(detectCtx!=null) {
+        		try {
+        			detectCtx.close();
+        		}
+        		catch (Exception e) {
+					// TODO: handle exception
+				}
+        	}
+        	b.clone();
             group.shutdownGracefully();
             logger.info("Connector Exit...");
         }

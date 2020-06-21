@@ -238,7 +238,7 @@ public class DataTransferLocalServer extends Thread {
 
                 }
             }
-        }, 2 * 60, 2 * 60, TimeUnit.SECONDS);
+        }, 2 * 60, 2  * 60, TimeUnit.SECONDS);
         //PropertyConfigurator.configure($ContentRoot$+"/config/log4j.properties");
         new DataTransferLocalServer(LocalServerConfig.getServerIP(), LocalServerConfig.getServerPort(), LocalServerConfig.getAuthConfig()).start();
     }
