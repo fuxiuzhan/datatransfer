@@ -10,11 +10,9 @@ package com.fxz.channelswitcher.datatransferlocalserver;
 import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
 import com.fxz.channelswitcher.datatransferserver.auth.handler.AuthHandler;
 import com.fxz.channelswitcher.datatransferserver.auth.handler.CheckSumHandler;
-import com.fxz.channelswitcher.datatransferserver.auth.handler.CompressHandler;
 import com.fxz.channelswitcher.datatransferserver.auth.handler.HeartBeatHandler;
 import com.fxz.channelswitcher.datatransferserver.auth.ssl.SSLConfig;
 import com.fxz.channelswitcher.datatransferserver.codec.Message2BytesCodec;
-import com.fxz.channelswitcher.datatransferserver.compress.CompressFactory;
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
 import com.fxz.channelswitcher.datatransferserver.messages.*;
 import com.fxz.channelswitcher.datatransferserver.statistic.InitConfig;
@@ -22,7 +20,6 @@ import com.fxz.channelswitcher.datatransferserver.statistic.LocalServerConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientInfo;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.*;
@@ -33,7 +30,6 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.ReferenceCountUtil;
 import org.apache.log4j.Logger;
-import org.mortbay.util.ajax.JSON;
 
 import javax.net.ssl.SSLEngine;
 import java.util.concurrent.ConcurrentHashMap;
@@ -101,7 +97,7 @@ public class DataTransferLocalServer extends Thread {
 
                         @Override
                         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                            logger.error("Error->" + cause.getLocalizedMessage());
+                            logger.error("Error->{}", cause);
                         }
 
                         @Override
@@ -220,25 +216,26 @@ public class DataTransferLocalServer extends Thread {
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Thread() {
             @Override
             public void run() {
+                setName("idledetectthread");
                 try {
-                	System.out.println("start detecting.....");
+                    System.out.println("start detecting.....");
                     ConcurrentHashMap<String, ClientConnector> chm = new ConcurrentHashMap<>();
                     chm.putAll(LocalServerConfig.getConnectMap());
-                    System.out.println("pair size->"+chm.size());
+                    System.out.println("pair size->" + chm.size());
                     chm.entrySet().stream().forEach(a -> {
-                    	long interal=System.currentTimeMillis() - a.getValue().getTimeStamp();
-                    	System.out.println("socket->"+a.getKey()+" internl->"+interal);
+                        long interal = System.currentTimeMillis() - a.getValue().getTimeStamp();
+                        System.out.println("socket->" + a.getKey() + " internal->" + interal + " ms");
                         if (interal > 10 * 60 * 1000) {
                             a.getValue().close();
                             LocalServerConfig.getConnectMap().remove(a.getKey());
-                            System.out.println(a + " socket slice over 10min closed...");
+                            System.out.println(a + " socket silence over 10min closed...");
                         }
                     });
                 } catch (Exception e) {
 
                 }
             }
-        }, 2 * 60, 2  * 60, TimeUnit.SECONDS);
+        }, 2 * 60, 2 * 60, TimeUnit.SECONDS);
         //PropertyConfigurator.configure($ContentRoot$+"/config/log4j.properties");
         new DataTransferLocalServer(LocalServerConfig.getServerIP(), LocalServerConfig.getServerPort(), LocalServerConfig.getAuthConfig()).start();
     }

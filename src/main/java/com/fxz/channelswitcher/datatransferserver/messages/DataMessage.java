@@ -3,6 +3,7 @@ package com.fxz.channelswitcher.datatransferserver.messages;
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 
 /**
@@ -91,7 +92,7 @@ public class DataMessage extends BaseMessage {
 
 	@Override
 	public String toString() {
-		return "DataMessage [scoketUUId->+" + getSocketUUID() + "]";
+		return "DataMessage [lSocketId=" + lSocketId + ", back=" + back + "]";
 	}
-
+	
 }

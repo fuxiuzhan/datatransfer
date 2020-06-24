@@ -1,6 +1,7 @@
 package com.fxz.channelswitcher.datatransferlocalserver;
 
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
+import com.fxz.channelswitcher.datatransferserver.constant.Params;
 import com.fxz.channelswitcher.datatransferserver.messages.ConnectMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
@@ -9,7 +10,6 @@ import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.Attribute;
@@ -52,22 +52,25 @@ public class ClientConnector extends Thread {
 
     @Override
     public void run() {
-        EventLoopGroup group = new NioEventLoopGroup(2);
+
         Bootstrap b = new Bootstrap();
         try {
-            b.group(group).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true).option(ChannelOption.SO_LINGER, 0).handler(new ChannelInitializer<SocketChannel>() {
+            b.group(Params.getGroup()).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true)
+                    .option(ChannelOption.SO_LINGER, 0).handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new ChannelHandlerAdapter() {
 
                         @Override
-                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+                                throws Exception {
                             lSocketId = ctx.attr(lsock);
                             socketUUId = ctx.attr(socketuuid);
-                            ResultMessage resultMessage = new ResultMessage(Const.RTN_ERROR, lSocketId.get() + "|" + cause.getLocalizedMessage(), false);
+                            ResultMessage resultMessage = new ResultMessage(Const.RTN_ERROR,
+                                    lSocketId.get() + "|" + cause.getLocalizedMessage(), false);
                             resultMessage.setSocketUUID(connectMessage.getSocketUUID());
                             ClientParams.getMainChannel().writeAndFlush(resultMessage);
-                            logger.error("Error->" + cause.getLocalizedMessage());
+                            logger.error("Error->{}", cause);
                             ClientParams.removeChannel(connectMessage.getSocketUUID());
                             LocalServerConfig.getConnectMap().remove(lSocketId.get());
                         }
@@ -91,7 +94,8 @@ public class ClientConnector extends Thread {
                         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
                             lSocketId = ctx.attr(lsock);
                             socketUUId = ctx.attr(socketuuid);
-                            ResultMessage resultMessage = new ResultMessage(Const.RTN_ERROR, lSocketId.get() + "|" + "disconnect", false);
+                            ResultMessage resultMessage = new ResultMessage(Const.RTN_ERROR,
+                                    lSocketId.get() + "|" + "disconnect", false);
                             resultMessage.setSocketUUID(connectMessage.getSocketUUID());
                             ClientParams.getMainChannel().writeAndFlush(resultMessage);
                             logger.error("Error->" + "disconnect");
@@ -109,10 +113,13 @@ public class ClientConnector extends Thread {
                                     timeStamp = System.currentTimeMillis();
                                     lSocketId = ctx.attr(lsock);
                                     socketUUId = ctx.attr(socketuuid);
-                                    byte[] bytes = new byte[len];
-                                    buffer.readBytes(bytes);
-                                    DataMessage dataMessage = new DataMessage(socketUUId.get(), lSocketId.get(), ClientParams.getUserId(), ClientParams.getAppId(), bytes, true);
-                                    ClientParams.getMainChannel().writeAndFlush(dataMessage);
+                                    byte[] rawBuffer = new byte[len];
+                                    buffer.readBytes(rawBuffer);
+                                    DataMessage dataMessage = new DataMessage(socketUUId.get(),
+                                            lSocketId.get(), ClientParams.getUserId(), ClientParams.getAppId(),
+                                            rawBuffer, true);
+                                    ClientParams.getMainChannel().writeAndFlush(dataMessage).addListener(e -> {
+                                    });
                                 }
                             }
                             ReferenceCountUtil.release(msg);
@@ -128,21 +135,19 @@ public class ClientConnector extends Thread {
             logger.info("Connector Connected!...");
             f.channel().closeFuture().sync();
         } catch (Exception e) {
-            ResultMessage resultMessage = new ResultMessage(Const.RTN_CONNECT, connectMessage.getlSocketId() + "|" + e.getLocalizedMessage(), false);
+            ResultMessage resultMessage = new ResultMessage(Const.RTN_CONNECT,
+                    connectMessage.getlSocketId() + "|" + e.getLocalizedMessage(), false);
             resultMessage.setSocketUUID(connectMessage.getSocketUUID());
             ClientParams.getMainChannel().writeAndFlush(resultMessage);
             logger.error("Error->" + e.getLocalizedMessage());
         } finally {
-        	if(detectCtx!=null) {
-        		try {
-        			detectCtx.close();
-        		}
-        		catch (Exception e) {
-					// TODO: handle exception
-				}
-        	}
-        	b.clone();
-            group.shutdownGracefully();
+            if (detectCtx != null) {
+                try {
+                    detectCtx.close();
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+            }
             logger.info("Connector Exit...");
         }
 
