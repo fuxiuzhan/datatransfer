@@ -5,7 +5,9 @@ import com.fxz.channelswitcher.datatransferserver.constant.Params;
 import com.fxz.channelswitcher.datatransferserver.messages.ConnectMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
+import com.fxz.channelswitcher.datatransferserver.statistic.ClientConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
+import com.fxz.channelswitcher.datatransferserver.utils.TpsLimiter;
 import org.apache.log4j.Logger;
 
 
@@ -25,6 +27,8 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
+
+import java.net.InetSocketAddress;
 
 public class ClientListener extends Thread {
     Logger logger = Logger.getLogger(this.getClass());
@@ -81,6 +85,21 @@ public class ClientListener extends Thread {
                                     lSocketId.set(connectMessage.getlSocketId());
                                     socketUUId = ctx.attr(socketuuid);
                                     socketUUId.set(connectMessage.getSocketUUID());
+                                    InetSocketAddress insocket = (InetSocketAddress) ctx.channel()
+                                            .remoteAddress();
+                                    String peerIp = insocket.getAddress().getHostAddress();
+                                    if (ClientConfig.getBlackMap().containsKey(peerIp)) {
+                                        ctx.close();
+                                        return;
+                                    }
+                                    ClientConfig.addLimiter(peerIp, new TpsLimiter(3600 * 1000, ClientConfig.getMaxTryTimes()));
+                                    TpsLimiter limiter = ClientConfig.getLimiter(peerIp);
+                                    if (limiter != null) {
+                                        if (!limiter.isAllow()) {
+                                            ClientConfig.addBlackMap(peerIp);
+                                            ctx.close();
+                                        }
+                                    }
                                 }
 
                                 @Override
@@ -93,6 +112,7 @@ public class ClientListener extends Thread {
                                     ResultMessage resultMessage = new ResultMessage(Const.RTN_ERROR, lSocketId + "|disconnect", false, true);
                                     resultMessage.setSocketUUID(socketUUId.get());
                                     ClientParams.getMainChannel().writeAndFlush(resultMessage);
+                                    ClientConfig.removeLimiter(lSocketId.get());
                                     System.out.println("Channel Inactive....");
                                 }
 
