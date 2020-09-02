@@ -90,6 +90,7 @@ public class ClientListener extends Thread {
                                     String peerIp = insocket.getAddress().getHostAddress();
                                     if (ClientConfig.getBlackMap().containsKey(peerIp)) {
                                         ctx.close();
+                                        logger.warn("ip->"+peerIp +"is in black List ,connect request closed!!!!");
                                         return;
                                     }
                                     ClientConfig.addLimiter(peerIp, new TpsLimiter(3600 * 1000, ClientConfig.getMaxTryTimes()));
@@ -97,6 +98,7 @@ public class ClientListener extends Thread {
                                     if (limiter != null) {
                                         if (!limiter.isAllow()) {
                                             ClientConfig.addBlackMap(peerIp);
+                                            logger.warn("ip->"+peerIp +" is be add in black list ,connect request closed!!!!");
                                             ctx.close();
                                         }
                                     }
@@ -112,7 +114,6 @@ public class ClientListener extends Thread {
                                     ResultMessage resultMessage = new ResultMessage(Const.RTN_ERROR, lSocketId + "|disconnect", false, true);
                                     resultMessage.setSocketUUID(socketUUId.get());
                                     ClientParams.getMainChannel().writeAndFlush(resultMessage);
-                                    ClientConfig.removeLimiter(lSocketId.get());
                                     System.out.println("Channel Inactive....");
                                 }
 
