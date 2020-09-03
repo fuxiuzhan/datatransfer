@@ -248,6 +248,7 @@ public class DataTransferClient extends Thread {
             public void run() {
                 setName("BlcakPrinter");
                 System.out.println("Black Ip List->" + JSON.toString(ClientConfig.getBlackMap()));
+                System.out.println("White Ip List->" + JSON.toString(ClientConfig.getWhiteSet()));
             }
         }, 2 * 60, 2 * 60, TimeUnit.SECONDS);
         new DataTransferClient(ClientConfig.getServerIP(), ClientConfig.getServerPort(), ClientConfig.getAuthConfig()).start();

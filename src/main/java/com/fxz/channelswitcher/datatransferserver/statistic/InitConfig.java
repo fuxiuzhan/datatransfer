@@ -195,7 +195,7 @@ public class InitConfig {
     }
 
     public static void initIpFilter() {
-        ClientConfig.getWhiteSet().add(FileUtils.readFile(ClientConfig.WHITE_LIST));
+        ClientConfig.getWhiteSet().addAll(FileUtils.readFile(ClientConfig.WHITE_LIST));
         List<String> blackIpList = new ArrayList<>();
         blackIpList.addAll(FileUtils.readFile(ClientConfig.AUTO_DETECT_LIST));
         blackIpList.addAll(FileUtils.readFile(ClientConfig.BLACK_LIST));
