@@ -47,7 +47,7 @@ public class IpDetectHandler extends ChannelHandlerAdapter {
                 ClientConfig.removeLimiter(peerIp);
                 return false;
             } else {
-                logger.info("peerIp->" + peerIp + "  currentCouter->" + limiter.getCounter() + " maxCounter->" + ClientConfig.getMaxTryTimes());
+                logger.info("peerIp->" + peerIp + "  currentCounter->" + limiter.getCounter() + " maxCounter->" + ClientConfig.getMaxTryTimes());
             }
         }
         return true;
