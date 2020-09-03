@@ -1,9 +1,6 @@
 package com.fxz.channelswitcher.datatransferserver.utils;
 
-import org.springframework.util.StringUtils;
-
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +19,7 @@ public class FileUtils {
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     new FileInputStream(filePath)));
             for (String line = br.readLine(); line != null; line = br.readLine()) {
-                if (!StringUtils.isEmpty(line)) {
+                if (line!=null && line.length()>0) {
                     result.add(line);
                 }
             }
