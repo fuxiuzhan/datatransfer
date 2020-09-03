@@ -3,6 +3,7 @@ package com.fxz.channelswitcher.datatransferserver.handler;
 import com.fxz.channelswitcher.datatransferserver.statistic.ClientConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.FileUtils;
 import com.fxz.channelswitcher.datatransferserver.utils.TpsLimiter;
+import com.fxz.channelswitcher.test.Client;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.log4j.Logger;
@@ -43,7 +44,10 @@ public class IpDetectHandler extends ChannelHandlerAdapter {
                 ClientConfig.addBlackMap(peerIp);
                 logger.warn("ip->" + peerIp + " is be add in black list ,connect request closed!!!!");
                 FileUtils.appendFile(ClientConfig.AUTO_DETECT_LIST, peerIp);
+                ClientConfig.removeLimiter(peerIp);
                 return false;
+            } else {
+                logger.info("peerIp->" + peerIp + "  currentCouter->" + limiter.getCounter() + " maxCounter->" + ClientConfig.getMaxTryTimes());
             }
         }
         return true;

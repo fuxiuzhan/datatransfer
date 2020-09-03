@@ -27,6 +27,10 @@ public class TpsLimiter {
         this.token = token;
     }
 
+    public int getCounter() {
+        return counter.get();
+    }
+
     public boolean isAllow() {
         if (System.currentTimeMillis() - timeStart > internal) {
             timeStart = System.currentTimeMillis();
