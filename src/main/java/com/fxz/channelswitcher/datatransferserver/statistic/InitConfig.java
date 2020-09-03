@@ -1,10 +1,13 @@
 package com.fxz.channelswitcher.datatransferserver.statistic;
 
 import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
+import com.fxz.channelswitcher.datatransferserver.utils.ClientInfo;
+import com.fxz.channelswitcher.datatransferserver.utils.FileUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -191,6 +194,20 @@ public class InitConfig {
         } catch (Exception e) {
             logger.error("Error->" + e);
             return false;
+        }
+    }
+
+    public static void initIpFilter() {
+        ClientConfig.getWhiteSet().add(FileUtils.readFile(ClientConfig.WHITE_LIST));
+        List<String> blackIpList = new ArrayList<>();
+        blackIpList.addAll(FileUtils.readFile(ClientConfig.AUTO_DETECT_LIST));
+        blackIpList.addAll(FileUtils.readFile(ClientConfig.BLACK_LIST));
+        if (blackIpList.size() > 0) {
+            for (String ip : blackIpList) {
+                if (!StringUtils.isEmpty(ip)) {
+                    ClientConfig.addBlackMap(ip);
+                }
+            }
         }
     }
 }

@@ -3,14 +3,8 @@ package com.fxz.channelswitcher.datatransferserver.statistic;
 import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.TpsLimiter;
 import org.apache.tools.ant.util.DateUtils;
-import org.springframework.cglib.core.Local;
-import sun.util.resources.LocaleData;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -52,17 +46,29 @@ public class ClientConfig {
     private static int maxTryTimes = 200;
 
     private static Map<String, String> blackMap = new ConcurrentHashMap<>();
-
+    private static Set<String> whiteSet = new HashSet<>();
     private static Map<String, TpsLimiter> limiterMap = new ConcurrentHashMap<>();
+
+    public static final String BLACK_LIST = "config/black.list";
+    public static final String WHITE_LIST = "config/white.list";
+    public static final String AUTO_DETECT_LIST = "config/auto_detect.list";
 
     public static TpsLimiter getLimiter(String ip) {
         return limiterMap.get(ip);
     }
 
     public static void addLimiter(String ip, TpsLimiter limiter) {
-    	if(limiterMap.get(ip)==null) {
-			limiterMap.put(ip, limiter);
-		}
+        if (limiterMap.get(ip) == null) {
+            limiterMap.put(ip, limiter);
+        }
+    }
+
+    public static void addWhiteSet(String peerIp) {
+        whiteSet.add(peerIp);
+    }
+
+    public static Set getWhiteSet() {
+        return whiteSet;
     }
 
     public static void removeLimiter(String ip) {
