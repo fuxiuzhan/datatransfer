@@ -2,6 +2,7 @@ package com.fxz.channelswitcher.datatransferclient;
 
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
 import com.fxz.channelswitcher.datatransferserver.constant.Params;
+import com.fxz.channelswitcher.datatransferserver.handler.IpDetectHandler;
 import com.fxz.channelswitcher.datatransferserver.messages.ConnectMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
@@ -57,6 +58,7 @@ public class ClientListener extends Thread {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
+                        	ch.pipeline().addLast(new IpDetectHandler());
                             ch.pipeline().addLast(new ChannelHandlerAdapter() {
                                 @Override
                                 public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

@@ -94,7 +94,6 @@ public class DataTransferClient extends Thread {
                     SSLEngine sslEngine = SSLConfig.getSSLContext("config/fxz_test.jks").createSSLEngine();
                     sslEngine.setUseClientMode(true);
                     sslEngine.setNeedClientAuth(true);
-                    ch.pipeline().addLast(new IpDetectHandler());
                     ch.pipeline().addLast("ssl", new SslHandler(sslEngine));
                     ch.pipeline().addLast(new Message2BytesCodec());
                     if (!authConfig.getMessageDigest().equalsIgnoreCase("none")) {
