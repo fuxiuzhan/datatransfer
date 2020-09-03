@@ -16,6 +16,7 @@ import com.fxz.channelswitcher.datatransferserver.auth.ssl.SSLConfig;
 import com.fxz.channelswitcher.datatransferserver.codec.Message2BytesCodec;
 import com.fxz.channelswitcher.datatransferserver.compress.CompressFactory;
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
+import com.fxz.channelswitcher.datatransferserver.handler.IpDetectHandler;
 import com.fxz.channelswitcher.datatransferserver.messages.BaseMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
@@ -99,6 +100,7 @@ public class DataTransferClient extends Thread {
                         ch.pipeline().addLast(new CheckSumHandler(authConfig.getMessageDigest()));
                     }
                     //ch.pipeline().addLast(new CompressHandler(CompressFactory.getCompressor("snappy")));
+                    ch.pipeline().addLast(new IpDetectHandler());
                     ch.pipeline().addLast(new AuthHandler(authConfig));
                     ch.pipeline().addLast(new IdleStateHandler(30, 30, 0, TimeUnit.SECONDS));
                     ch.pipeline().addLast(new HeartBeatHandler());
@@ -239,6 +241,7 @@ public class DataTransferClient extends Thread {
             System.out.println("Config File Error,Please Check config file->" + args[0]);
             return;
         }
+        InitConfig.initIpFilter();
         PropertyConfigurator.configure("config/log4j.properties");
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Thread() {
             @Override
