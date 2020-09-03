@@ -85,23 +85,6 @@ public class ClientListener extends Thread {
                                     lSocketId.set(connectMessage.getlSocketId());
                                     socketUUId = ctx.attr(socketuuid);
                                     socketUUId.set(connectMessage.getSocketUUID());
-                                    InetSocketAddress insocket = (InetSocketAddress) ctx.channel()
-                                            .remoteAddress();
-                                    String peerIp = insocket.getAddress().getHostAddress();
-                                    if (ClientConfig.getBlackMap().containsKey(peerIp)) {
-                                        ctx.close();
-                                        logger.warn("ip->"+peerIp +"is in black List ,connect request closed!!!!");
-                                        return;
-                                    }
-                                    ClientConfig.addLimiter(peerIp, new TpsLimiter(3600 * 1000, ClientConfig.getMaxTryTimes()));
-                                    TpsLimiter limiter = ClientConfig.getLimiter(peerIp);
-                                    if (limiter != null) {
-                                        if (!limiter.isAllow()) {
-                                            ClientConfig.addBlackMap(peerIp);
-                                            logger.warn("ip->"+peerIp +" is be add in black list ,connect request closed!!!!");
-                                            ctx.close();
-                                        }
-                                    }
                                 }
 
                                 @Override
