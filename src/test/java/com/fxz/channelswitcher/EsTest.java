@@ -1,6 +1,7 @@
 package com.fxz.channelswitcher;
 
 import org.apache.http.HttpHost;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -27,13 +28,25 @@ public class EsTest {
 
     public static void main(String[] args) throws IOException {
         //search();
-        update();
+        //update();
+        insert();
         getEsClient().close();
     }
 
     static RestHighLevelClient getEsClient() {
         RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost(ES_HOST, ES_PORT, "http")));
         return client;
+    }
+
+    static void insert() throws IOException {
+        IndexRequest indexRequest = new IndexRequest("testdb");
+        indexRequest.id(10 + "");
+        Map<String, String> map = new HashMap<>();
+        map.put("name", "name10");
+        map.put("address", "addresss-10");
+        map.put("sug2", "search text");
+        indexRequest.source(JSON.toString(map), XContentType.JSON);
+        System.out.println(getEsClient().index(indexRequest, RequestOptions.DEFAULT));
     }
 
     static void update() throws IOException {
