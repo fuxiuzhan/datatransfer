@@ -18,6 +18,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.mortbay.util.ajax.JSON;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,8 +29,8 @@ public class EsTest {
 
     public static void main(String[] args) throws IOException {
         //search();
-        //update();
-        insert();
+        update();
+        //insert();
         getEsClient().close();
     }
 
@@ -51,8 +52,9 @@ public class EsTest {
 
     static void update() throws IOException {
         UpdateRequest updateRequest = new UpdateRequest("testdb", "8");
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("address", "address-updated");
+        map.put("sug2", Arrays.asList("book1", "apple2"));
         updateRequest.doc(JSON.toString(map), XContentType.JSON);
         UpdateResponse update = getEsClient().update(updateRequest, RequestOptions.DEFAULT);
         System.out.println(JSON.toString(update));
