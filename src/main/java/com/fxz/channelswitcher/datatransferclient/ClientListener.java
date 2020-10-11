@@ -6,12 +6,8 @@ import com.fxz.channelswitcher.datatransferserver.handler.IpDetectHandler;
 import com.fxz.channelswitcher.datatransferserver.messages.ConnectMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
-import com.fxz.channelswitcher.datatransferserver.statistic.ClientConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
-import com.fxz.channelswitcher.datatransferserver.utils.TpsLimiter;
 import org.apache.log4j.Logger;
-
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
@@ -19,8 +15,6 @@ import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
@@ -28,8 +22,6 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
-
-import java.net.InetSocketAddress;
 
 public class ClientListener extends Thread {
     Logger logger = Logger.getLogger(this.getClass());

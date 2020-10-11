@@ -13,8 +13,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import org.apache.log4j.Logger;
+import org.mortbay.log.Log;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 
 
@@ -53,14 +55,22 @@ public class VerifyHandler implements IProcessMessage {
             if (Params.getOnlineClient(verifymsg.getClientInfo().getClientID()) != null) {
 
                 ClientInfo clientInfo = Params.getClientInfo(verifymsg.getClientInfo().getClientID());
-                if (clientInfo.isEnableReplace()) {
+                if (clientInfo.isEnableReplace()) {{
+                    CountDownLatch signal = new CountDownLatch(1);
                     Channel channel = Params.getOnlineClient(clientInfo.getClientID());
                     if (channel != null) {
                         try {
-                            channel.close();
+                            channel.close().addListener(e -> {
+                            	Log.info("replaced channel closed..");
+                                signal.countDown();
+                            });
                         } catch (Exception e) {
                             logger.error(e);
                         }
+                    }
+                    try {
+                        signal.await();
+                    } catch (Exception e) {
                     }
                     Params.addOnLineClient(verifymsg.getClientInfo().getClientID(), ctx.channel());
                     clientId = ctx.attr(clientid);
@@ -72,7 +82,7 @@ public class VerifyHandler implements IProcessMessage {
 
                     ctx.writeAndFlush(new ResultMessage(Const.RTN_VERIFY, "access_ok", true));
                     ctx.writeAndFlush(new MsgMessage());
-                } else {
+                }} else {
                     /*
                      * 已经在线，不能登录
                      */

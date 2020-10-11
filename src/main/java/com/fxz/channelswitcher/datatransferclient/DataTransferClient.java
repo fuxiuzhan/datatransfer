@@ -6,24 +6,19 @@
  */
 package com.fxz.channelswitcher.datatransferclient;
 
-import com.fxz.channelswitcher.datatransferlocalserver.ClientConnector;
 import com.fxz.channelswitcher.datatransferserver.auth.config.AuthConfig;
 import com.fxz.channelswitcher.datatransferserver.auth.handler.AuthHandler;
 import com.fxz.channelswitcher.datatransferserver.auth.handler.CheckSumHandler;
-import com.fxz.channelswitcher.datatransferserver.auth.handler.CompressHandler;
 import com.fxz.channelswitcher.datatransferserver.auth.handler.HeartBeatHandler;
 import com.fxz.channelswitcher.datatransferserver.auth.ssl.SSLConfig;
 import com.fxz.channelswitcher.datatransferserver.codec.Message2BytesCodec;
-import com.fxz.channelswitcher.datatransferserver.compress.CompressFactory;
 import com.fxz.channelswitcher.datatransferserver.constant.Const;
-import com.fxz.channelswitcher.datatransferserver.handler.IpDetectHandler;
 import com.fxz.channelswitcher.datatransferserver.messages.BaseMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.DataMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.ResultMessage;
 import com.fxz.channelswitcher.datatransferserver.messages.VerifyMessage;
 import com.fxz.channelswitcher.datatransferserver.statistic.ClientConfig;
 import com.fxz.channelswitcher.datatransferserver.statistic.InitConfig;
-import com.fxz.channelswitcher.datatransferserver.statistic.LocalServerConfig;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientInfo;
 import com.fxz.channelswitcher.datatransferserver.utils.ClientParams;
 import io.netty.bootstrap.Bootstrap;
