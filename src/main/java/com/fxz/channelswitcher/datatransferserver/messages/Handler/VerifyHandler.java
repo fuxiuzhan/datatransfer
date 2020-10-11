@@ -17,6 +17,7 @@ import org.mortbay.log.Log;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 
 
@@ -69,7 +70,7 @@ public class VerifyHandler implements IProcessMessage {
                         }
                     }
                     try {
-                        signal.await();
+                    	 signal.await(5, TimeUnit.SECONDS);
                     } catch (Exception e) {
                     }
                     Params.addOnLineClient(verifymsg.getClientInfo().getClientID(), ctx.channel());
